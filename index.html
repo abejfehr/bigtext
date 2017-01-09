@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html style="height: 100%; margin: 0;">
+  <head>
+    <meta charset="utf-8">
+    <title>BigText</title>
+    <style>
+    .input {
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: sans-serif;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .input:focus {
+      border: none;
+      box-shadow: none !important;
+      outline: none !important;
+      text-align: center;
+    }
+    </style>
+  </head>
+  <body style="position: relative; height: 100%; margin: 0;">
+    <div class="input" contenteditable>Your text goes here</div>
+    <script>
+      var input = document.querySelector('.input');
+      var focusInput = () => {
+        input.focus();
+      }
+      var resizeText = () => {
+        // Resize the text in case it's too small
+        var fontSize = 1;
+        var width = 1;
+        document.title = input.innerText || "BigText";
+        do {
+          fontSize += 2;
+          input.style.fontSize = (fontSize) + 'px';
+          width = parseFloat(window.getComputedStyle(input, null).getPropertyValue('width'));
+          height = parseFloat(window.getComputedStyle(input, null).getPropertyValue('height'))
+        } while (input.value != '' && width < document.documentElement.clientWidth && height < document.documentElement.clientHeight);
+        input.style.fontSize = (fontSize - 2) + 'px';
+      }
+      input.addEventListener('input', resizeText);
+      input.addEventListener('blur', focusInput);
+      window.addEventListener('resize', resizeText);
+      resizeText();
+      focusInput();
+    </script>
+  </body>
+</html>
