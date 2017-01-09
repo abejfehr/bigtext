@@ -28,6 +28,7 @@
       var input = document.querySelector('.input');
       var focusInput = () => {
         input.focus();
+        document.execCommand('selectAll',false,null);
       }
       var resizeText = () => {
         // Resize the text in case it's too small
@@ -35,12 +36,12 @@
         var width = 1;
         document.title = input.innerText || "BigText";
         do {
-          fontSize += 2;
+          fontSize += 4;
           input.style.fontSize = (fontSize) + 'px';
           width = parseFloat(window.getComputedStyle(input, null).getPropertyValue('width'));
           height = parseFloat(window.getComputedStyle(input, null).getPropertyValue('height'))
         } while (input.value != '' && width < document.documentElement.clientWidth && height < document.documentElement.clientHeight);
-        input.style.fontSize = (fontSize - 2) + 'px';
+        input.style.fontSize = (fontSize - 4) + 'px';
       }
       input.addEventListener('input', resizeText);
       input.addEventListener('blur', focusInput);
