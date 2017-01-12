@@ -47,6 +47,9 @@
       // Puts the input element into focus and selects all of its contents
       var focusInput = () => {
         input.focus();
+      }
+
+      var selectAll = () => {
         document.execCommand('selectAll', false, null);
       }
 
@@ -86,6 +89,7 @@
       // First thing we need to do is make the text the right size, and focus
       resizeText();
       focusInput();
+      selectAll();
     </script>
   </body>
 </html>
