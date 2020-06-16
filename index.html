@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>BigText</title>
     <style>
-    html {
-      height: 100%;
-      margin: 0;
-    }
-    body {
-      /* Vertically centers the input without position: absolute; */
-      align-items: center;
-      display: flex;
-      height: 100%;
-      justify-content: center;
-      margin: 0;
-    }
-    .input {
-      font-family: sans-serif;
-      font-weight: bold;
-      max-height: 100%;
-      max-width: 100%;
-      overflow: hidden;
-      overflow-wrap: normal;
-      text-align: center;
-      /* white-space: nowrap; */
-    }
-    .input:focus {
-      /* For removing the blue glow in Chrome */
-      border: none;
-      box-shadow: none !important;
-      outline: none !important;
-      text-align: center;
-    }
+      html {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        /* Vertically centers the input without position: absolute; */
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        margin: 0;
+      }
+      .input {
+        font-family: sans-serif;
+        font-weight: bold;
+        max-height: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        overflow-wrap: normal;
+        text-align: center;
+        /* white-space: nowrap; */
+      }
+      .input:focus {
+        /* For removing the blue glow in Chrome */
+        border: none;
+        box-shadow: none !important;
+        outline: none !important;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -42,16 +42,20 @@
       const SAFE = 5;
 
       // Get a handle on the input
-      var input = document.querySelector('.input');
+      var input = document.querySelector(".input");
+
+      // If there's a query string, set it to that
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      input.innerHTML = urlSearchParams.get("t") || "Your text goes here";
 
       // Puts the input element into focus and selects all of its contents
       var focusInput = () => {
         input.focus();
-      }
+      };
 
       var selectAll = () => {
-        document.execCommand('selectAll', false, null);
-      }
+        document.execCommand("selectAll", false, null);
+      };
 
       // Resizes the text inside the editable text field
       var resizeText = () => {
@@ -62,29 +66,40 @@
         var sizes = [1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1];
 
         // I want the title to match the text too! (Up to a point)
-        document.title = input.innerText.substring(0, 30) + (input.innerText.length > 30 ? '...' : '') || "BigText";
+        document.title =
+          input.innerText.substring(0, 30) +
+            (input.innerText.length > 30 ? "..." : "") || "BigText";
+
+        urlSearchParams.set("t", input.innerText.trim());
+        var newRelativePathQuery =
+          window.location.pathname + "?" + urlSearchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
 
         // And if the user hasn't entered anything, just don't bother
-        if (!input.innerText) { return; }
+        if (!input.innerText) {
+          return;
+        }
 
         // Now go through each power of 2 and try adding it to the size
         for (let i = 0; i < sizes.length; ++i) {
           fontSize += sizes[i];
-          input.style.fontSize = (fontSize) + 'px';
+          input.style.fontSize = fontSize + "px";
 
           // If it's too big, we'll just go back
-          if (input.scrollWidth > input.clientWidth + SAFE ||
-              input.scrollHeight > input.clientHeight + SAFE) {
+          if (
+            input.scrollWidth > input.clientWidth + SAFE ||
+            input.scrollHeight > input.clientHeight + SAFE
+          ) {
             fontSize -= sizes[i];
-            input.style.fontSize = (fontSize) + 'px';
+            input.style.fontSize = fontSize + "px";
           }
         }
-      }
+      };
 
       // Event bindings
-      input.addEventListener('input', resizeText);
-      input.addEventListener('blur', focusInput);
-      window.addEventListener('resize', resizeText);
+      input.addEventListener("input", resizeText);
+      input.addEventListener("blur", focusInput);
+      window.addEventListener("resize", resizeText);
 
       // First thing we need to do is make the text the right size, and focus
       resizeText();
